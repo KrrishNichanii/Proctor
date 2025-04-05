@@ -60,20 +60,30 @@ export default function TestPage(props){
 
 
   useEffect(() => {
-    const timer = setInterval(() => {
+    let myInterval = setInterval(() => {
       if (seconds > 0) {
         setSeconds(seconds - 1);
-      } else if (minutes > 0) {
-        setMinutes(minutes - 1);
-        setSeconds(59);
-      } else {
-        clearInterval(timer);
-        swal("Time's up!", "Redirecting to dashboard", "info").then(() => {
-          history.push('/dashboard');
-        });
       }
-    })}
-  , 1000);
+      else {
+          setMinutes(minutes - 1);
+          setSeconds(59);
+        }
+
+        if (minutes === 1 && seconds === 0) {
+          swal("Only 1 Minute Left, Please Submit or attendance wont be marked");
+        }
+
+      if (seconds <= 0 && minutes <= 0) {
+          <Redirect to='/thankyou'/>
+        }
+      sendLogsToServer();
+  
+    },1000);
+    return () => {
+      clearInterval(myInterval);
+    };
+
+  });
   /**
    * The below 4 functions are helper functions to set state
    * Are passed to the ObjectDetection component to allow it
