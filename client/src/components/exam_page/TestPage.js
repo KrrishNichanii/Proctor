@@ -6,6 +6,7 @@ import swal from 'sweetalert';
 import "./ExamPage.css";
 import { Redirect, useHistory } from "react-router-dom";
 import axios from 'axios';
+import QuestionPage from './Question';
 
 export default function TestPage(props){
   const [cameraStream, setCameraStream] = useState(null);
@@ -24,8 +25,55 @@ export default function TestPage(props){
   const [multiple_faces_visible, setMultipleFacesVisible] = useState(false);
   const [checkedPrevLogs, setCheckedPrevLogs] = useState(false);
   
+  const [questionCount , setQuestionCount] = useState(0) ; 
+  const exam = {
+    name: "DC End Sem" , 
+    professor_email: "abc@gmail.com" , 
+    exam_code: "2fqdS" , 
+    questions:
+          [ 
+            {
+              type: "MCQ" , 
+              questionTitle: "What is the full form of DC ?" , 
+              options: [
+                "Distributed Computing" , 
+                "Disk Computing" , 
+                "Dhage Computing" , 
+                "Daksh Computing"
+              ] , 
+              marks: 1 ,
+              "correctAnswer": "Distributed Computing" 
+            } , 
+            {
+              type: "fillInBlanks" , 
+              questionTitle: "What is the full form of DC ?" , 
+              correctAnswer: "Distributed Computing" , 
+              marks: 1 , 
+            }
+          ],
+    max_marks: 50 , 
+    date_time_start: "2025-04-05T06:00:00.000+00:00" , 
+    duration: 20 
+  }
+
   const history = useHistory();
 
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (seconds > 0) {
+        setSeconds(seconds - 1);
+      } else if (minutes > 0) {
+        setMinutes(minutes - 1);
+        setSeconds(59);
+      } else {
+        clearInterval(timer);
+        swal("Time's up!", "Redirecting to dashboard", "info").then(() => {
+          history.push('/dashboard');
+        });
+      }
+    })}
+  , 1000);
   /**
    * The below 4 functions are helper functions to set state
    * Are passed to the ObjectDetection component to allow it
@@ -160,30 +208,33 @@ export default function TestPage(props){
    * the minutes and seconds counter and send cheating data to server
    */
   useEffect(() => {
-    let myInterval = setInterval(() => {
-      if (seconds > 0) {
-        setSeconds(seconds - 1);
-      }
-      else {
-          setMinutes(minutes - 1);
-          setSeconds(59);
-        }
+    console.log("J") ; 
+  },[])
+  // useEffect(() => {
+  //   let myInterval = setInterval(() => {
+  //     if (seconds > 0) {
+  //       setSeconds(seconds - 1);
+  //     }
+  //     else {
+  //         setMinutes(minutes - 1);
+  //         setSeconds(59);
+  //       }
 
-        if (minutes === 1 && seconds === 0) {
-          swal("Only 1 Minute Left, Please Submit or attendance wont be marked");
-        }
+  //       if (minutes === 1 && seconds === 0) {
+  //         swal("Only 1 Minute Left, Please Submit or attendance wont be marked");
+  //       }
 
-      if (seconds <= 0 && minutes <= 0) {
-          <Redirect to='/thankyou'/>
-        }
-      sendLogsToServer();
+  //     if (seconds <= 0 && minutes <= 0) {
+  //         <Redirect to='/thankyou'/>
+  //       }
+  //     sendLogsToServer();
   
-    },1000);
-    return () => {
-      clearInterval(myInterval);
-    };
+  //   },1000);
+  //   return () => {
+  //     clearInterval(myInterval);
+  //   };
 
-  });
+  // });
   
   /**
    * This function is called when the student presses exit exam button
@@ -251,17 +302,17 @@ export default function TestPage(props){
   // </div>
 
 
-  <div style={{ height: "100vh" , width: "100%" , backgroundColor: '#2D2D2D'}} className="my_container" id="my_container">
+  <div style={{ height: "100vh" , width: "100%" , backgroundColor: 'white'}} className="my_container" id="my_container">
     
 
   <div className="detect">
-    {/* <Detection 
+    <Detection 
        MobilePhone={update_mobile_phone_found} 
        ProhibitedObject={update_prohibited_object_found} 
        FaceNotVisible={update_face_not_visible} 
        MultipleFacesVisible={update_multiple_faces_visible}
        setCameraStream={setCameraStream}
-    /> */}
+    />
     
   </div>
 
@@ -294,7 +345,7 @@ export default function TestPage(props){
     
   
     <div className="test">
-        <iframe 
+        {/* <iframe 
       src={form_link} 
       id="form" 
       style={{ 
@@ -306,7 +357,21 @@ export default function TestPage(props){
       }}  
     > 
       Loading… 
-    </iframe>
+    </iframe> */}
+    <h2>
+      {exam?.name}
+    </h2>
+    {/* <div className="time_rem">
+        <h1 align="center" style={{ fontSize: '60px' , color: 'black' }}>{minutes}:{seconds < 10 ? `0${seconds}` : seconds}</h1>
+    </div> */}
+    <div className="max-h-[80vh] overflow-y-auto space-y-4 p-2">
+      {
+        exam.questions.map((question, idx) => (
+          <QuestionPage key={idx} question={{ ...question, questionNumber: idx }} />
+        ))
+      }
+   </div>
+      {/* <QuestionPage question={exam.questions} /> */}
   </div>
 </div>
   )
@@ -314,32 +379,3 @@ export default function TestPage(props){
 
 }
 
-{
-  "name": "DC End Sem" , 
-  "professor_email": "abc@gmail.com" , 
-  "exam_code": "2fqdS" , 
-  "questions":
-        [ 
-          {
-            "type": "MCQ" , 
-            "questions": "What is the full form of DC ?" , 
-            "options": [
-              "Distributed Computing" , 
-              "Disk Computing" , 
-              "Dhage Computing" , 
-              "Daksh Computing"
-            ] , 
-            "marks": 1 ,
-            "correctAnswer": "Distributed Computing" 
-          } , 
-          {
-            "type": "fillInBlanks" , 
-            "questions": "What is the full form of DC ?" , 
-            "correctAnswer": "Distributed Computing" , 
-            "marks": 1 , 
-          }
-        ],
-  "max_marks": 50 , 
-  "date_time_start": "2025-04-05T06:00:00.000+00:00" , 
-  "duration": 20 
-}
