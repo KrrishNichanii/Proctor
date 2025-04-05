@@ -34,14 +34,23 @@ app.use("/api/exams",exams);
 app.use("/api/logs",logs);
 // DB Config
 const db = require("./config/keys").mongoURI;
+mongoose.set('strictQuery', true);
+
+mongoose.connect(db, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => console.log("MongoDB successfully connected"))
+.catch((err) => console.log("MongoDB connection error:", err));
+
 // Connect to MongoDB
-mongoose
-  .connect(
-    db,
-    { useNewUrlParser: true }
-  )
-  .then(() => console.log("MongoDB successfully connected"))
-  .catch(err => console.log(err));
+// mongoose
+//   .connect(
+//     db,
+//     { useNewUrlParser: true }
+//   )
+//   .then(() => console.log("MongoDB successfully connected"))
+//   .catch(err => console.log(err));
 
 // Handle GET requests to /api route
 app.get("/api", (req, res) => {

@@ -3,7 +3,9 @@ import PropTypes from "prop-types";
 import TextField from '@mui/material/TextField';
 import { connect } from "react-redux";
 import { logoutUser } from "../../actions/authActions";
-import { useHistory } from "react-router-dom";
+import { useHistory} from "react-router";
+// import {useNavigate} from 'react-router-dom' ; 
+// import { useNavigate } from 'react-router-dom';
 
 function StudentDashboard(props) {
 
@@ -13,7 +15,7 @@ function StudentDashboard(props) {
     const axios = require("axios");
     const moment = require("moment");
     const history = useHistory();
-
+    // const navigate = useNavigate() ; 
     /**
      * This function is called when student enters exam code to start the exam
      * It checks the exam code, if invalid it displays error
@@ -65,6 +67,7 @@ function StudentDashboard(props) {
 
             // if current time is before exam start, show error
             else {
+              console.log("Curr " , curr_date_time , " Exam start time " ,exam_date_time_start) ; 
                 setError("Exam has not started now");
             }
           })
@@ -123,6 +126,9 @@ function StudentDashboard(props) {
                 className="btn btn-large waves-effect waves-light hoverable blue accent-3"
               >
                 Logout
+              </button>
+              <button onClick={() => history.push('/test')}>
+                Test
               </button>
               <br/>
               <p style={{ color: "red" }}>{error}</p>

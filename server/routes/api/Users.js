@@ -20,43 +20,49 @@ const User = require("../../models/Users");
  * else it creates the account
  */
 router.post("/register", (req, res) => {
-    // validate registration data for errors
-    const {errors, isValid} = validateRegisterInput(req.body);
+  const { errors, isValid } = validateRegisterInput(req.body);
 
-    // if there is some error return error code 400 with error description
-    if(!isValid){
-        return res.status(400).json(errors);
-    }
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
 
-    User.findOne({email : req.body.email}).then(user=>{
-        // if user is already in database return error
-        // else if he is a new user create an account
-        if(user){
-            return res.status(400).json({email: "Email already exists in database"});
-        }
-        else{
-            const newUser = new User({
-                name: req.body.name,
-                email: req.body.email,
-                password: req.body.password,
-                userType: req.body.userType,
-            });
-            bcrypt.genSalt(10, (err, salt) => {
-                bcrypt.hash(newUser.password, salt, (err, hash) => {
-                  if (err) throw err;
-                  newUser.password = hash;
-                  newUser.save()
-                    .then(user => res.json(user))
-                    .catch(err => console.log(err));
-                });
+  User.findOne({ email: req.body.email }).then(user => {
+    if (user) {
+      return res.status(400).json({ email: "Email already exists in database" });
+    } else {
+      const newUser = new User({
+        name: req.body.name,
+        email: req.body.email,
+        password: req.body.password,
+        userType: req.body.userType,
+      });
+
+      bcrypt.genSalt(10, (err, salt) => {
+        if (err) return res.status(500).json({ error: "Salt generation failed" });
+
+        bcrypt.hash(newUser.password, salt, (err, hash) => {
+          if (err) return res.status(500).json({ error: "Password hashing failed" });
+
+          newUser.password = hash;
+
+          newUser.save()
+            .then(user => {
+              return res.status(200).json({
+                email: user.email,
+                name: user.name,
+                userType: user.userType
               });
-              return res.status(200).json({email:newUser.email, name:newUser.name, userType:newUser.userType})
-
-        }
-
-    });
-
+            })
+            .catch(err => {
+              console.error(err);
+              return res.status(500).json({ error: "Internal server error" });
+            });
+        });
+      });
+    }
+  });
 });
+
 
 
 // @route POST api/users/login

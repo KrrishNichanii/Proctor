@@ -7,9 +7,12 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import DateTimePicker from '@mui/lab/DateTimePicker';
+// import AdapterDateFns from '@mui/lab/AdapterDateFns';
+// import LocalizationProvider from '@mui/lab/LocalizationProvider';
+// import DateTimePicker from '@mui/lab/DateTimePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import swal from 'sweetalert';
 import { logoutUser } from "../../actions/authActions";
 import LogsTable from "./LogsTable.js"
@@ -90,6 +93,7 @@ function ProfDashboard(props) {
       }
       var current_date_time = new Date();
       if(date_time_start< current_date_time){
+        console.log("J " , date_time_start) ; 
         setErrorText("Please select a date and time of the future");
         return;
       }
@@ -205,16 +209,18 @@ function ProfDashboard(props) {
               />
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DateTimePicker
-                      renderInput={(props) => <TextField {...props} />}
-                      label="DateTimePicker"
-                      value={date_time_start}
-                      margin="dense"
-                      variant="standard"
-                      onChange={(newValue) => {
-                      setDateTimeStart(newValue);
-                      }}
+                    label="Start Date & Time"
+                    value={date_time_start}
+                    onChange={(newValue) => setDateTimeStart(newValue)}
+                    slotProps={{
+                      textField: {
+                        variant: 'standard',
+                        fullWidth: true,
+                        margin: 'dense'
+                      }
+                    }}
                   />
-              </LocalizationProvider>
+            </LocalizationProvider>
               <TextField
                   id="duration"
                   name="duration"

@@ -24,6 +24,7 @@ return (
       <div >
       {user.userType===true?<ProfDashboard name={user.name} prof_email={user.email} logoutUser={this.props.logoutUser}/>:
       <StudentDashboard name={user.name} student_email={user.email} logoutUser={this.props.logoutUser}/>}
+      
       </div>
     );
   }
