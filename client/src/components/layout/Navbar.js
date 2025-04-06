@@ -18,8 +18,8 @@ export default function Navbar() {
           }}
           className="col s5 brand-logo center black-text"
         >
-          <i className="material-icons">computer</i>
-          PROCTO
+          {/* <i className="material-icons">computer</i> */}
+          {/* PROCTO */}
         </Link>
       </div>
     </nav>

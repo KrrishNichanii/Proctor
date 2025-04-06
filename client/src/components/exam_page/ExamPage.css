@@ -1,33 +1,397 @@
 .my_container {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr 1fr;
-    gap: 0px 0px;
-    grid-auto-flow: row;
+  display: grid;
+  grid-template-columns: minmax(300px, 30%) 1fr;
+  grid-template-rows: auto;
+  gap: 20px;
+  padding: 20px;
+  height: 100vh;
+  width: 100%;
+  grid-template-areas:
+    "left-panel test";
+  overflow: hidden;
+  background-color: #f9fafc;
+  background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.left-panel {
+  grid-area: left-panel;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  height: calc(100vh - 40px);
+  overflow-y: auto;
+  padding-right: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,0,0,0.2) rgba(0,0,0,0.05);
+}
+
+.left-panel::-webkit-scrollbar {
+  width: 6px;
+}
+
+.left-panel::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.05);
+  border-radius: 10px;
+}
+
+.left-panel::-webkit-scrollbar-thumb {
+  background-color: rgba(0,0,0,0.2);
+  border-radius: 10px;
+}
+
+.detect { 
+  width: 100%; 
+  height: 300px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.12), 0 6px 6px rgba(0,0,0,0.1);
+  background-color: #000;
+  margin-bottom: 5px;
+  flex-shrink: 0;
+  border: 3px solid #ffffff;
+}
+
+/* Fix for the video and canvas inside detect */
+.detect video, 
+.detect canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.time_rem { 
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  border-radius: 15px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  margin-bottom: 5px;
+  transition: transform 0.3s ease;
+  border-left: 4px solid #3f51b5;
+}
+
+.time_rem:hover {
+  transform: translateY(-5px);
+}
+
+.time_rem h1 {
+  color: #3f51b5;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.name { 
+  padding: 20px;
+  border-radius: 15px;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  margin-bottom: 5px;
+  border-left: 4px solid #ff9800;
+  transition: transform 0.3s ease;
+}
+
+.name:hover {
+  transform: translateY(-5px);
+}
+
+.instructions { 
+  padding: 20px;
+  border-radius: 15px;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  margin-bottom: 5px;
+  border-left: 4px solid #4caf50;
+  transition: transform 0.3s ease;
+}
+
+.instructions:hover {
+  transform: translateY(-5px);
+}
+
+.exit { 
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  border-radius: 15px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  margin-bottom: 5px;
+  border-left: 4px solid #f44336;
+  transition: transform 0.3s ease;
+}
+
+.exit:hover {
+  transform: translateY(-5px);
+}
+
+.submit-btn {
+  margin-bottom: 15px !important;
+  width: 100%;
+  background-color: #4caf50 !important;
+  color: white !important;
+  font-weight: 500 !important;
+  transition: all 0.3s !important;
+  border-radius: 30px !important;
+  text-transform: none !important;
+  font-size: 16px !important;
+  padding: 10px 0 !important;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3) !important;
+}
+
+.submit-btn:hover {
+  background-color: #45a049 !important;
+  box-shadow: 0 6px 14px rgba(76, 175, 80, 0.4) !important;
+  transform: translateY(-2px) !important;
+}
+
+.submit-btn:disabled {
+  background-color: #a5d6a7 !important;
+  color: #e8f5e9 !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+.exit-btn {
+  width: 100%;
+  border-color: #f44336 !important;
+  color: #f44336 !important;
+  transition: all 0.3s !important;
+  border-radius: 30px !important;
+  text-transform: none !important;
+  font-size: 16px !important;
+  padding: 10px 0 !important;
+  box-shadow: 0 4px 12px rgba(244, 67, 54, 0.1) !important;
+}
+
+.exit-btn:hover {
+  background-color: rgba(244, 67, 54, 0.08) !important;
+  box-shadow: 0 6px 14px rgba(244, 67, 54, 0.2) !important;
+  transform: translateY(-2px) !important;
+}
+
+.test { 
+  grid-area: test;
+  padding: 30px;
+  border-radius: 20px;
+  background-color: white;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-height: calc(100vh - 40px);
+}
+
+.test h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #333;
+  font-weight: 600;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 15px;
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 10;
+  font-size: 28px;
+  letter-spacing: 0.5px;
+}
+
+.question-list {
+  padding: 10px 5px;
+  overflow-y: auto;
+  max-height: calc(100vh - 120px);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,0,0,0.2) rgba(0,0,0,0.05);
+}
+
+.question-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.question-list::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.05);
+  border-radius: 10px;
+}
+
+.question-list::-webkit-scrollbar-thumb {
+  background-color: rgba(0,0,0,0.2);
+  border-radius: 10px;
+}
+
+.question-container {
+  margin-bottom: 30px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  border: 1px solid #eaeaea;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.question-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 5px;
+  background: linear-gradient(to bottom, #3f51b5, #2196f3);
+}
+
+.question-container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+}
+
+/* Improved styling for radio buttons */
+.MuiRadio-root {
+  padding: 12px !important;
+  color: #2196f3 !important;
+}
+
+.MuiRadio-root.Mui-checked {
+  color: #3f51b5 !important;
+}
+
+.MuiFormControlLabel-root {
+  width: 100%;
+  margin: 8px 0 !important;
+  border-radius: 10px;
+  transition: all 0.3s;
+  padding: 5px 10px;
+}
+
+.MuiFormControlLabel-root:hover {
+  background-color: rgba(33, 150, 243, 0.08);
+  transform: translateX(5px);
+}
+
+/* Make the entire label clickable */
+.MuiFormControlLabel-label {
+  width: 100%;
+  cursor: pointer;
+  font-size: 16px !important;
+  color: #444 !important;
+}
+
+.answer-input {
+  border: none;
+  border-bottom: 2px solid #2196f3;
+  padding: 12px 15px;
+  width: 100%;
+  max-width: 500px;
+  font-size: 16px;
+  outline: none;
+  transition: all 0.3s;
+  border-radius: 5px 5px 0 0;
+  background-color: rgba(33, 150, 243, 0.05);
+}
+
+.answer-input:focus {
+  border-color: #3f51b5;
+  box-shadow: 0 1px 3px rgba(63, 81, 181, 0.2);
+  background-color: rgba(63, 81, 181, 0.05);
+}
+
+#form {
+  height: 100%;
+  width: 100%;
+  border: 2px solid #ccc;
+  border-radius: 15px;
+}
+
+/* Override the Detections.css .size class */
+.size {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+}
+
+/* Make the layout responsive */
+@media screen and (max-width: 768px) {
+  .my_container {
+    grid-template-columns: 1fr;
     grid-template-areas:
-      "detect detect test test"
-      "detect detect test test"
-      "time_rem name test test"
-      "instructions exit test test";
+      "left-panel"
+      "test";
+    gap: 15px;
+    overflow-y: auto;
+    height: auto;
+    min-height: 100vh;
   }
   
-  .detect { grid-area: detect; width: 50%; 
-    height: 40%; align-items: center; }
+  .left-panel {
+    height: auto;
+    overflow-y: visible;
+    max-height: none;
+  }
   
-  .time_rem { grid-area: time_rem;}
+  .detect {
+    height: 200px;
+  }
   
-  .name { grid-area: name;}
+  .test {
+    max-height: none;
+    height: auto;
+    min-height: 500px;
+    padding: 20px;
+  }
   
-  .instructions { grid-area: instructions;}
+  .question-list {
+    max-height: none;
+  }
   
-  .exit { grid-area: exit; }
+  .question-container:hover {
+    transform: none;
+  }
   
-  .test { grid-area: test; }
-  
-  #form{
-    top: 7%;
-    right: 0;
-    position:fixed; 
-    height: 90%;
-    width: 50%;
-  }  
+  .time_rem:hover,
+  .name:hover,
+  .instructions:hover,
+  .exit:hover {
+    transform: none;
+  }
+}
+
+.option-label {
+  width: 100%;
+  margin: 8px 0 !important;
+  border-radius: 10px;
+  transition: all 0.3s;
+  padding: 10px 15px !important;
+  background-color: #f9fafc;
+  border: 1px solid #e0e0e0;
+}
+
+.option-label:hover {
+  background-color: rgba(33, 150, 243, 0.08);
+  transform: translateX(5px);
+  border-color: #2196f3;
+}
+
+.option-label .MuiRadio-root.Mui-checked + span {
+  font-weight: 500;
+  color: #1976d2;
+}

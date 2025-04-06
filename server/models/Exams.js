@@ -6,15 +6,6 @@ const ExamSchema = new Schema({
       type: String,
       required: true
     },
-    prof_email: {
-      type: String,
-      required: true
-    },
-    exam_link: {
-      type: String,
-      required: true
-    },
-    
     date_time_start:{
         type: Date,
         required:true
@@ -26,8 +17,8 @@ const ExamSchema = new Schema({
     exam_code:{
       type:String,
       required:true
-    }
-    
+    } ,
+    questions: []
   });
 // export the model
 module.exports = User = mongoose.model("exams", ExamSchema);

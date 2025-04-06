@@ -28,14 +28,15 @@ function StudentDashboard(props) {
         axios.get('/api/exams/examByCode?exam_code='+exam_code)
         .then(function (response) {
             // if exam code is right
-            console.log(response);
+            console.log("Res " , response);
             let date_string = response.data.date_time_start;
             const exam_date_time_start = new Date(date_string);
             const exam_date_time_end = moment(exam_date_time_start).add(response.data.duration, 'm').toDate();
             const curr_date_time = new Date();
-
+            console.log(curr_date_time + " " + exam_date_time_start + " " +exam_date_time_end);
+            
             // if exam has begun but not ended, then allow user to enter
-            if(curr_date_time >= exam_date_time_start && curr_date_time < exam_date_time_end){
+            if(true || (curr_date_time >= exam_date_time_start && curr_date_time < exam_date_time_end)){
                 
               // calculate time remaining
                 var diff = Math.abs(exam_date_time_end - curr_date_time);

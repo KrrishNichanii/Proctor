@@ -10,38 +10,53 @@ const validateExamInput = require("../../validation/CreateExam");
  * Then we try to check if same exam code is present. If not then
  * we create the exam else we display error
  */
-router.post("/createExam", (req, res) =>{
 
+
+router.get("/:id", async (req, res) => {
+    const examId = req.params.id;
+    
+    try {
+        const exam = await Exam.find({exam_code:examId});
+        if (!exam) {
+            return res.status(404).json({ error: "Exam not found" });
+        }
+        return res.status(200).json(exam);
+    } catch (error) {
+        console.error("Error fetching exam by ID:", error);
+        return res.status(500).json({ error: "Server error" });
+    }
+});
+router.post("/createExam", (req, res) =>{
+     
+    // console.log("RE " , req.body);
+    // return res.status(400).json({message: "Hiii"}) ; 
+    
     // validate exam data for errors
     const {errors, isValid} = validateExamInput(req.body);
-
-    // if there is some error return error code 400 with error description
-    if(!isValid){
-        return res.status(400).json(errors);
+    try {
+        Exam.findOne({exam_code : req.body.exam_code}).then(exam=>{
+            // if exam code is already present return error
+            if(exam){
+                return res.status(400).json({name: "Exam with this code exists in database"});
+            }
+            else{
+    
+                const newExam = new Exam({
+                    name: req.body.name,
+                    date_time_start: req.body.date_time_start,
+                    duration: req.body.duration,
+                    exam_code:req.body.exam_code,
+                    questions: req.body.questions , 
+                });
+                
+                newExam.save().then(exam=>res.join(exam)).catch(err=> console.log(err));
+                return res.status(200).json(newExam);
+    
+            }
+        });
+    } catch (error) {
+        console.log('Error in exam api ' , error);
     }
-
-    Exam.findOne({exam_code : req.body.exam_code}).then(exam=>{
-        // if exam code is already present return error
-        if(exam){
-            return res.status(400).json({name: "Exam with this code exists in database"});
-        }
-        else{
-
-            const newExam = new Exam({
-                name: req.body.name,
-                prof_email: req.body.prof_email,
-                exam_link: req.body.exam_link,
-                date_time_start: req.body.date_time_start,
-                duration: req.body.duration,
-                exam_code:req.body.exam_code,
-            });
-            
-            newExam.save().then(exam=>res.join(exam)).catch(err=> console.log(err));
-            return res.status(200).json(newExam);
-
-        }
-
-    });
 
 
 });
@@ -57,6 +72,8 @@ router.get("/examByCode", (req, res) => {
         if(!exam){
             return res.status(400).json("Exam Code is invalid");
         }
+        console.log('Ex ' , exam);
+        
         return res.status(200).json(exam);
     });
 }); 

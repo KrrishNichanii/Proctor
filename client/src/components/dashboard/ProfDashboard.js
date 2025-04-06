@@ -7,9 +7,6 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-// import AdapterDateFns from '@mui/lab/AdapterDateFns';
-// import LocalizationProvider from '@mui/lab/LocalizationProvider';
-// import DateTimePicker from '@mui/lab/DateTimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
@@ -17,6 +14,7 @@ import swal from 'sweetalert';
 import { logoutUser } from "../../actions/authActions";
 import LogsTable from "./LogsTable.js"
 import { connect } from "react-redux";
+import CreateExam from '../exam_page/CreateExam.js'
 
 function ProfDashboard(props) {
   const [examDialogOpen, setExamDialogOpen] = useState(false);
@@ -28,7 +26,7 @@ function ProfDashboard(props) {
   const [errorText, setErrorText] = useState("");
   const [exam_code_search, setExamCodeSearch] = useState("");
   const axios = require("axios");
-
+  const [obj , setObj] = useState({}) ; 
   /**
    * This function opens the exam dialog
    * Triggered when user presses Create Exam button
@@ -36,7 +34,10 @@ function ProfDashboard(props) {
   function openExamDialog(){
       setExamDialogOpen(true);
   }
-
+ 
+  function submitQuestion(question) {
+    console.log('Q ' , question);
+  }
   /**
    * This function is called when user presses Cancel Button
    * or clicks outside the dialog box
@@ -70,19 +71,21 @@ function ProfDashboard(props) {
    * that exam has been created
    * 
    */
-  function createExam(){
+  function createExam({questionCount , 
+    name , 
+    date_time_start ,
+    duration , 
+    questions ,
+    exam_code
+  }){
+    console.log('Q ' , questions);
+    setObj(questions) ; 
+    // return ;
       if(name===""){
           setErrorText("Name of Exam cannot be empty");
           return;
       }
-      if(exam_link===""){
-          setErrorText("Exam Link cannot be empty");
-          return;
-      }
-      if(!isUrl(exam_link)){
-          setErrorText("Exam Link must be a valid url");
-          return;
-      }
+
       if(duration === 0){
           setErrorText("Duration cannot be 0");
           return;
@@ -91,19 +94,21 @@ function ProfDashboard(props) {
           setErrorText("Click Generate exam code to get an exam code first");
           return;
       }
+
       var current_date_time = new Date();
       if(date_time_start< current_date_time){
         console.log("J " , date_time_start) ; 
         setErrorText("Please select a date and time of the future");
         return;
       }
+
+
       axios.post('/api/exams/createExam', {
           name: name,
-          exam_link: exam_link,
           date_time_start: date_time_start,
           duration: duration,
           exam_code: exam_code,
-          prof_email: props.prof_email,
+          questions , 
         })
         .then(function (response) {
           console.log(response);
@@ -183,79 +188,26 @@ function ProfDashboard(props) {
               <DialogContentText>
                   Enter details for the exam. Press Generate to generate the exam code and share it with the students.
               </DialogContentText>
-              <TextField
-                  autoFocus
-                  padding="10px"
-                  margin="dense"
-                  variant="standard"
-                  id="name"
-                  label="Exam Name"
-                  type="text"
-                  fullWidth
-                  required={true}
-                  value={name}
-                  onChange={(e)=>setName(e.target.value)}
-              />
-              <TextField
-                  id="examLink"
-                  name="examLink"
-                  label="Exam Link"
-                  margin="dense"
-                  variant="standard"
-                  value={exam_link}
-                  onChange={(e)=> setExamLink(e.target.value)}
-                  required={true}
-                  fullWidth
-              />
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <DateTimePicker
-                    label="Start Date & Time"
-                    value={date_time_start}
-                    onChange={(newValue) => setDateTimeStart(newValue)}
-                    slotProps={{
-                      textField: {
-                        variant: 'standard',
-                        fullWidth: true,
-                        margin: 'dense'
-                      }
-                    }}
-                  />
-            </LocalizationProvider>
-              <TextField
-                  id="duration"
-                  name="duration"
-                  label="Exam duration (minutes)"
-                  margin="dense"
-                  variant="standard"
-                  value={duration}
-                  onChange={(e)=> setDuration(e.target.value)}
-                  required={true}
-                  minDate={new Date()}
-                  minTime={new Date(0, 0, 0, 8)}
-              />
-              <TextField
-                  id="exam_code"
-                  name="exam_code"
-                  label="Exam Code"
-                  margin="dense"
-                  variant="standard"
-                  value={exam_code}
-                  disabled={true}
-                  onChange={(e)=> setExamCode(e.target.value)}
-                  required={true}
-                  fullWidth
-              />
-              <p style={{ color: "red" }}> {errorText}</p>
-              <Button onClick={generateCode}>Generate Exam Code</Button>
+
+
+              <CreateExam 
+                 submitQuestion={submitQuestion}
+                 closeExamDialog={closeExamDialog} 
+                 createExam = {createExam}
+                 />
+
               </DialogContent>
-              <DialogActions>
+
+
+              <p style={{color: 'red'}} >{errorText}</p>
+              {/* <DialogActions>
               <Button onClick={closeExamDialog} color="secondary">
                   Close
               </Button>
               <Button onClick={createExam} color="primary">
                   Save
               </Button>
-              </DialogActions>
+              </DialogActions> */}
             </Dialog>
             
           </div>
